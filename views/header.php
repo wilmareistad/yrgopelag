@@ -9,6 +9,6 @@
 
 <body>
 
-
-
-    <?php require __DIR__ . '/app/autoload.php';
+    <nav>
+        <a href="index.php">Start</a>
+    </nav>
