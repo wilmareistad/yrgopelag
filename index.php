@@ -20,7 +20,7 @@ $rooms = $statement->fetchAll(PDO::FETCH_ASSOC);
     <label>
         Check-in:
         <input type="date"
-            name="arrival-date"
+            name="check_in"
             min="2026-01-01"
             max="2026-01-31" required>
     </label>
@@ -28,9 +28,13 @@ $rooms = $statement->fetchAll(PDO::FETCH_ASSOC);
     <label>
         Check-out:
         <input type="date"
-            name="departure_date"
+            name="check_out"
             min="2026-01-01"
             max="2026-01-31" required>
+    </label>
+    <label>
+        Ditt namn:
+        <input type="text" name="name" required>
     </label>
 
     <button type="submit">Boka rum</button>
