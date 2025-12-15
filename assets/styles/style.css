@@ -1,5 +1,14 @@
+:root {
+    --dark-blue: #000f38;
+    --blue: #0046FF;
+    --light-blue: #73C8D2;
+    --light: #F5F1DC;
+    --orange: #FF9013;
+}
+
 * {
     box-sizing: border-box;
+    color: var(--dark-blue);
 }
 
 .logo {
@@ -12,3 +21,4 @@ nav {
     flex-direction: column;
     text-align: center;
 }
+

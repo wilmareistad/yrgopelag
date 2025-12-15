@@ -46,6 +46,30 @@ if (isset($_POST['room_id'], $_POST['check_in'], $_POST['check_out'], $_POST['na
     <p>Total price: <?= $totalPrice ?></p>
 
 <?php
+
+    // add the guest if it not exist
+    $statement = $database->prepare("SELECT id FROM guests WHERE name = :name");
+    $statement->execute([':name' => $name]);
+    $guestId = $statement->fetchColumn();
+
+    if (!$guestId) {
+        $statement = $database->prepare("INSERT INTO guests (name) VALUES (:name)");
+        $statement->execute([':name' => $name]);
+        $guestId = (int)$database->lastInsertId();
+    }
+
+    // save booking
+
+    $statement = $database->prepare("INSERT INTO bookings (guest_id, room_id, check_in, check_out, totalprice)
+    VALUES (:guest_id, :room_id, :check_in, :check_out, :totalprice)");
+
+    $statement->execute([
+        ':guest_id' => $guestId,
+        ':room_id' => $roomId,
+        ':check_in' => $checkIn,
+        ':check_out' => $checkOut,
+        ':totalprice' => $totalPrice
+    ]);
 } else {
     echo "Some info is missing";
 } ?>
