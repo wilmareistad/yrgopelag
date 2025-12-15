@@ -1,21 +1,18 @@
 <?php require __DIR__ . '/app/autoload.php';
 require __DIR__ . '/views/header.php';
 
-
 $statement = $database->query('SELECT * FROM rooms');
 
 $rooms = $statement->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
+<h1>Welcome to Scubaland!</h1>
+
+<h2>Book your room here</h2>
+
+<h3>Choose date, room and your name</h3>
 
 <form method="post" action="booking.php">
-    <?php foreach ($rooms as $room): ?>
-        <label>
-            <input type="radio" name="room_id" value="<?= $room['id'] ?>" required>
-            <?= htmlspecialchars($room['type']) ?> –
-            <?= (int)$room['price'] ?> $/natt
-        </label>
-    <?php endforeach; ?>
 
     <label>
         Check-in:
@@ -33,9 +30,19 @@ $rooms = $statement->fetchAll(PDO::FETCH_ASSOC);
             max="2026-01-31" required>
     </label>
     <label>
-        Ditt namn:
+        Your name:
         <input type="text" name="name" required>
     </label>
 
-    <button type="submit">Boka rum</button>
+    <button type="submit">Book Room</button>
+    <?php foreach ($rooms as $room): ?>
+        <label class="rooms">
+            <img class="hotelRoom" src=" <?= $room['room_image'] ?>" alt="hotel room">
+            <input type="radio" name="room_id" value="<?= $room['id'] ?>" required>
+            <?= htmlspecialchars($room['type']) ?> –
+            <?= (int)$room['price'] ?> $/natt
+        </label>
+    <?php endforeach; ?>
+
+
 </form>

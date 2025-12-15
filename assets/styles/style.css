@@ -5,3 +5,10 @@
 .logo {
     width: 10vw;
 }
+
+nav {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+}
