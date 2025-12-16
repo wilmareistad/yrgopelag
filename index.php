@@ -51,8 +51,29 @@ $rooms = $statement->fetchAll(PDO::FETCH_ASSOC);
 
 <?php
 // Days when the room is booked
-$booked = [2, 6, 19, 27, 28];
+
+$roomId = 1;
+
+$statement = $database->prepare("SELECT check_in, check_out FROM bookings WHERE room_id = :room_id");
+$statement->execute([':room_id' => $roomId]);
+
+$bookedDays = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+// add booked on all booked days
+
+$booked = [];
+
+foreach ($bookedDays as $bookedDay) {
+
+    $checkInDate = substr($bookedDay['check_in'], 8, 2);
+    $checkOutDate = substr($bookedDay['check_out'], 8, 2);
+    $bookedDaysRange = range($checkInDate, $checkOutDate);
+
+    $booked = array_merge($booked, $bookedDaysRange);
+}
+
 ?>
+
 
 <section class="calendar">
     <?php
