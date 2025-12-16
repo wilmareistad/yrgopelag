@@ -7,7 +7,7 @@
     <title>Document</title>
     <link rel="stylesheet" href="/assets/styles/style.css">
     <link rel="stylesheet" href="/assets/styles/index.css">
-
+    <link rel="stylesheet" href="/assets/styles/calender.css">
 </head>
 
 <body>
