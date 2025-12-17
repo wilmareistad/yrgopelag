@@ -31,7 +31,7 @@ transferCodeForm.addEventListener('submit', (event) => {
       if (data.error) {
         console.error(data.error);
       } else {
-        addTransferCode(data.transfer_code || data.transferCode);
+        addTransferCode(data.transferCode);
       }
     });
 });

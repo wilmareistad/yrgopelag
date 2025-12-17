@@ -14,6 +14,6 @@
 <body>
 
     <nav>
-        <a href="index.php"><img class="logo" src="/assets/images/logo.jpeg"></a>
-        <a href="index.php">Start</a>
+        <a href="/index.php"><img class="logo" src="/assets/images/logo.jpeg"></a>
+        <a href="/index.php">Start</a>
     </nav>

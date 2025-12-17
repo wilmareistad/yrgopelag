@@ -12,7 +12,7 @@ $rooms = $statement->fetchAll(PDO::FETCH_ASSOC);
 
 <h3>Choose date, room and your name</h3>
 
-<form method="post" action="booking.php">
+<form method="post" action="/app/users/booking.php">
 
     <label>
         Check-in:
@@ -32,6 +32,10 @@ $rooms = $statement->fetchAll(PDO::FETCH_ASSOC);
     <label>
         Your name:
         <input type="text" name="name" required>
+    </label>
+    <label>
+        Your transfercode:
+        <input type="text" name="transferCode" required>
     </label>
 
     <button type="submit">Book Room</button>

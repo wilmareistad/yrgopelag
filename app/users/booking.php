@@ -1,5 +1,10 @@
-<?php require __DIR__ . '/app/autoload.php';
-require __DIR__ . '/views/header.php';
+<?php
+require __DIR__ . '/../../vendor/autoload.php';
+require __DIR__ . '/../autoload.php';
+require __DIR__ . '/../../views/header.php';
+
+// for guzzle to get bank data
+use GuzzleHttp\Client;
 
 if (isset($_POST['room_id'], $_POST['check_in'], $_POST['check_out'], $_POST['name'])) {
     $roomId = $_POST['room_id'];
@@ -7,6 +12,7 @@ if (isset($_POST['room_id'], $_POST['check_in'], $_POST['check_out'], $_POST['na
     $checkOut = $_POST['check_out'];
     $name = htmlspecialchars(trim($_POST['name']));
 
+    //check out must be greater then check in
     if ($checkOut <= $checkIn) {
         die("Check-out must be after check-in");
     }
@@ -45,7 +51,20 @@ if (isset($_POST['room_id'], $_POST['check_in'], $_POST['check_out'], $_POST['na
     <p>Number of nights: <?= $nights ?></p>
     <p>Total price: <?= $totalPrice ?></p>
 
+    <!-- check if the transfercode is okey -->
+
 <?php
+
+    $hotelUser = 'Scubaland';
+    $apiKey = $_ENV['API_KEY'];
+    $client = new Client(['base_uri' => 'https://www.yrgopelag.se/centralbank/']);
+
+    try {
+        $transferCode;
+    }
+;
+
+
 
     // add the guest if it not exist
     $statement = $database->prepare("SELECT id FROM guests WHERE name = :name");
