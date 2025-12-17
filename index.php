@@ -91,3 +91,5 @@ foreach ($bookedDays as $bookedDay) {
     endfor; ?>
 
 </section>
+
+<section class="tranfercodeForm"> <?php require __DIR__ . "/book.php" ?> </section>
