@@ -1,0 +1,24 @@
+.hotelRoom {
+    width: 20vw;
+    height: 30vh;
+}
+
+.rooms {
+    display: flex;
+    justify-content: space-around;
+}
+
+h1, h2, h3 {
+    text-align: center;
+}
+
+.hotelContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 22vw;
+    padding: 1rem;
+    background-color: bisque;
+    border-radius: 1rem;
+    margin: 1rem;
+}

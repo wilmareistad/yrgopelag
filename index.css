@@ -1,9 +1,0 @@
-.hotelRoom {
-    width: 20vw;
-    height: 30vh;
-}
-
-.rooms {
-    display: flex;
-    flex-direction: column;
-}

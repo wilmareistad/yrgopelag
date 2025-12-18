@@ -31,6 +31,12 @@ if (isset($_POST['room_id'], $_POST['check_in'], $_POST['check_out'], $_POST['na
     $nights = (new DateTime($checkIn))->diff(new DateTime($checkOut))->days;
     $totalPrice = $nights * $pricePerNight;
 
+    //features
+    $stmt = $database->query("SELECT * FROM features");
+    $features = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    $features = $_POST['features'] ?? [];
+
     // add the guest if it not exist
     $stmt = $database->prepare("SELECT id FROM guests WHERE name = :name");
     $stmt->execute([':name' => $name]);
@@ -79,7 +85,7 @@ if (isset($_POST['room_id'], $_POST['check_in'], $_POST['check_out'], $_POST['na
                 'guest_name' => $name,
                 'arrival_date' => $checkIn,
                 'departure_date' => $checkOut,
-                'features_used' => ['Snorkeling', 'Scuba diving', 'Scuba cave rave', 'Sea horse rinding'],
+                'features_used' => $features,
                 'star_rating' => 5
             ]
         ]);
