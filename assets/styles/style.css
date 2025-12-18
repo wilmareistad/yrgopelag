@@ -4,21 +4,27 @@
     --light-blue: #73C8D2;
     --light: #F5F1DC;
     --orange: #FF9013;
+    --font: "Montserrat", sans-serif;
+    --logo-font: "Quicksand", sans-serif;
 }
 
 * {
     box-sizing: border-box;
     color: var(--dark-blue);
+    font-family: var(--font);
+    padding: 0;
+    margin: 0;
 }
 
 .logo {
     width: 10vw;
+    font-family: var(--logo-font);
 }
 
 nav {
     display: flex;
     align-items: center;
-    flex-direction: column;
-    text-align: center;
+    justify-content: space-between;
+    padding: 2rem 3rem;
 }
 
