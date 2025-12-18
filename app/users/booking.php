@@ -79,7 +79,7 @@ if (isset($_POST['room_id'], $_POST['check_in'], $_POST['check_out'], $_POST['na
                 'guest_name' => $name,
                 'arrival_date' => $checkIn,
                 'departure_date' => $checkOut,
-                'features_used' => [],
+                'features_used' => ['Snorkeling', 'Scuba diving', 'Scuba cave rave', 'Sea horse rinding'],
                 'star_rating' => 5
             ]
         ]);
