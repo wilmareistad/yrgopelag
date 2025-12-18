@@ -35,7 +35,7 @@ $rooms = $statement->fetchAll(PDO::FETCH_ASSOC);
     </label>
     <label>
         Your transfercode:
-        <input type="text" name="transferCode" required>
+        <input type="text" name="transferCode" placeholder="Your transfer code" required>
     </label>
 
     <button type="submit">Book Room</button>
