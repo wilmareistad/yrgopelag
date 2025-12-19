@@ -8,9 +8,14 @@
     justify-content: space-around;
 }
 
-h1, h2, h3 {
+h2, h3 {
     text-align: center;
 }
+
+h2 {
+    padding: 2rem;
+}
+
 
 .hotelContainer {
     display: flex;

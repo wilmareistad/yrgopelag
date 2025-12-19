@@ -1,7 +1,6 @@
 <?php
 require __DIR__ . '/../../vendor/autoload.php';
 require __DIR__ . '/../autoload.php';
-require __DIR__ . '/../../views/header.php';
 // for guzzle to get bank data
 
 use GuzzleHttp\Client;
@@ -94,6 +93,27 @@ if (isset($_POST['room_id'], $_POST['check_in'], $_POST['check_out'], $_POST['na
             ':totalprice' => $totalPriceForEverything
         ]);
 
+        $bookingId = (int) $database->lastInsertId();
+
+        // save booking and feature
+
+        foreach ($selectedFeatures as $featureName) {
+
+            $stmt = $database->prepare("SELECT id FROM features WHERE feature = :feature");
+
+            $stmt->execute([':feature' => $featureName]);
+            $featureId = $stmt->fetchColumn();
+
+            if ($featureId) {
+                $stmt = $database->prepare("INSERT INTO feature_booking (feature_id, booking_id) VALUES (:feature_id, :booking_id)");
+
+                $stmt->execute([
+                    ':feature_id' => $featureId,
+                    ':booking_id' => $bookingId
+                ]);
+            }
+        };
+
         // Send receipt to centralbank
         $client->post('receipt', [
             'json' => [
@@ -121,9 +141,10 @@ if (isset($_POST['room_id'], $_POST['check_in'], $_POST['check_out'], $_POST['na
         echo "<p style='color:red'>Fel: " . $e->getMessage() . "</p>";
     }
 }
-?>
 
-<?php if ($receipt): ?>
+
+// $_SESSION['receipt'] = 
+if ($receipt): ?>
     <h2>Receipt</h2>
     <p>Guest: <?= $receipt['guest'] ?></p>
     <p>Room ID: <?= $receipt['roomId'] ?></p>
@@ -134,3 +155,4 @@ if (isset($_POST['room_id'], $_POST['check_in'], $_POST['check_out'], $_POST['na
     <p>Total Price: <?= $receipt['totalPriceForEverything'] ?> pesos</p>
     <p>Status: Booking confirmed and paid!</p>
 <?php endif; ?>
+<!-- "; -->

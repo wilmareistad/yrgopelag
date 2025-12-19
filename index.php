@@ -11,9 +11,7 @@ $features = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
 <main>
-    <h1 id="h1">Welcome to Scubaland!</h1>
-
-    <h2>Book your room here</h2>
+    <h2 id="h1">Welcome to Scubaland!</h2>
 
     <h3>Choose date, room and your name</h3>
 
