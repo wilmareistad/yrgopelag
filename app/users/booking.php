@@ -72,7 +72,7 @@ if (isset($_POST['room_id'], $_POST['check_in'], $_POST['check_out'], $_POST['na
     try {
         // Validate transferCode
         $res = $client->post('transferCode', [
-            'json' => ['transferCode' => $transferCode, 'totalCost' => $totalPrice]
+            'json' => ['transferCode' => $transferCode, 'totalCost' => $totalPriceForEverything]
         ]);
         $validate = json_decode($res->getBody(), true);
         if (isset($validate['error'])) throw new Exception($validate['error']);
@@ -91,7 +91,7 @@ if (isset($_POST['room_id'], $_POST['check_in'], $_POST['check_out'], $_POST['na
             ':room_id' => $roomId,
             ':check_in' => $checkIn,
             ':check_out' => $checkOut,
-            ':totalprice' => $totalPrice
+            ':totalprice' => $totalPriceForEverything
         ]);
 
         // Send receipt to centralbank
@@ -130,6 +130,7 @@ if (isset($_POST['room_id'], $_POST['check_in'], $_POST['check_out'], $_POST['na
     <p>Check-in: <?= $receipt['check_in'] ?></p>
     <p>Check-out: <?= $receipt['check_out'] ?></p>
     <p>Nights: <?= $receipt['nights'] ?></p>
-    <p>Total Price: <?= $receipt['totalPrice'] ?> $</p>
+    <p>Hotel Price: <?= $receipt['totalPrice'] ?> $</p>
+    <p>Total Price: <?= $receipt['totalPriceForEverything'] ?> $</p>
     <p>Status: Booking confirmed and paid!</p>
 <?php endif; ?>

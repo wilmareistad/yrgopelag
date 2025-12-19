@@ -22,11 +22,11 @@
 
 <body>
 
-    <section class="hero">
+    <!-- <section class="hero">
         <img src="/assets/images/hero.png" alt="">
         <div class="hero-overlay">
             <nav>
-                <!-- <a href="/index.php"><img class="logo" src="/assets/images/logo.jpeg"></a> -->
+                <a href="/index.php"><img class="logo" src="/assets/images/logo.jpeg"></a>
                 <a class="logo" href="/index.php">Scubaland</a>
                 <div class="navLinks">
                     <a href="/index.php">Start</a>
@@ -35,4 +35,4 @@
             <h1>Dive into Scubaland</h1>
             <p>Rooms, reefs & real adventures</p>
         </div>
-    </section>
+    </section> -->
