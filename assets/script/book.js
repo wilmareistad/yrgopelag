@@ -35,3 +35,4 @@ transferCodeForm.addEventListener('submit', (event) => {
       }
     });
 });
+
