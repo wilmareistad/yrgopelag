@@ -11,7 +11,7 @@ $features = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
 <main>
-    <h1>Welcome to Scubaland!</h1>
+    <h1 id="h1">Welcome to Scubaland!</h1>
 
     <h2>Book your room here</h2>
 
@@ -53,7 +53,7 @@ $features = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <div>
                             <input type="radio" name="room_id" value="<?= $room['id'] ?>" required>
                             <?= htmlspecialchars($room['type']) ?> –
-                            <?= (int)$room['price'] ?> $/natt
+                            <?= (int)$room['price'] ?> pesos/natt
                         </div>
 
                         <?php
@@ -112,7 +112,7 @@ $features = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <?php foreach ($features as $feature): ?>
                 <label>
                     <input type="checkbox" name="features[]" value="<?= $feature['feature'] ?>">
-                    <?= $feature['feature'] ?> (<?= (int)$feature['price'] ?> $)
+                    <?= $feature['feature'] ?> (<?= (int)$feature['price'] ?> pesos)
                 </label>
             <?php endforeach; ?>
         </div>

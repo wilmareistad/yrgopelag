@@ -130,7 +130,7 @@ if (isset($_POST['room_id'], $_POST['check_in'], $_POST['check_out'], $_POST['na
     <p>Check-in: <?= $receipt['check_in'] ?></p>
     <p>Check-out: <?= $receipt['check_out'] ?></p>
     <p>Nights: <?= $receipt['nights'] ?></p>
-    <p>Hotel Price: <?= $receipt['totalPrice'] ?> $</p>
-    <p>Total Price: <?= $receipt['totalPriceForEverything'] ?> $</p>
+    <p>Hotel Price: <?= $receipt['totalPrice'] ?> pesos</p>
+    <p>Total Price: <?= $receipt['totalPriceForEverything'] ?> pesos</p>
     <p>Status: Booking confirmed and paid!</p>
 <?php endif; ?>

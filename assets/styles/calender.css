@@ -17,7 +17,7 @@
   border: 1px solid #ddd;
   font-size: 0.9rem;
   transition: background 0.2s, transform 0.1s;
-}
+}x
 
 .day:hover {
   background: #eaeaea;
@@ -33,9 +33,9 @@
 
 /* Booked dates */
 .booked {
-  background: #bd9321;
-  border-color: #7b4002;
-  color: #b26229;
+  background: var(--orange);
+  border-color: #3c1f00;
+  color: var(--light);
   font-weight: 600;
 }
 
