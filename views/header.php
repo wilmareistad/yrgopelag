@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="/assets/styles/style.css">
     <link rel="stylesheet" href="/assets/styles/index.css">
     <link rel="stylesheet" href="/assets/styles/calender.css">
+    <link rel="stylesheet" href="/assets/styles/footer.css">
     <!-- font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,7 +23,7 @@
 
 <body>
 
-    <section class="hero">
+    <header class="hero">
         <img src="/assets/images/hero.png" alt="">
         <div class="hero-overlay">
             <nav>
@@ -37,4 +38,4 @@
             </a>
             <p>Rooms, reefs & real adventures</p>
         </div>
-    </section>
+    </header>

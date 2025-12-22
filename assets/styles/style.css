@@ -23,14 +23,13 @@ body {
 
 /* header hero */
 .logo {
-  width: 10vw;
   font-family: var(--logo-font);
   color: var(--background-color);
   font-size: 5rem;
   font-weight: 600;
 }
 
-nav {
+header nav {
   position: absolute;
   top: 0;
   left: 0;
