@@ -1,4 +1,4 @@
-<button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+<button class="btn btn-primary transfer-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
     Get your transfercode here
 </button>
 
@@ -9,7 +9,6 @@
     </div>
     <div class="offcanvas-body">
         <div>
-            Some text as placeholder. In real life you can have the elements you have chosen. Like, text, images, lists, etc.
             <!-- here is the transfercode code -->
             <div class="transferContainer">
                 <form action="" method="POST" id="getTransferCode">

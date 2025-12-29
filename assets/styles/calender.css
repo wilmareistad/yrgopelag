@@ -1,9 +1,9 @@
 .calendar {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 4px;
-  max-width: 280px;
-  margin: 1rem auto;
+  gap: 0.4rem;
+  padding: 1rem;
+  margin-top: auto;
   font-family: system-ui, sans-serif;
 }
 
@@ -17,9 +17,8 @@
   border: 1px solid #ddd;
   font-size: 0.9rem;
   transition: background 0.2s, transform 0.1s;
-}x
-
-.day:hover {
+}
+x .day:hover {
   background: #eaeaea;
   transform: scale(1.05);
 }
@@ -40,5 +39,5 @@
 }
 
 .booked:hover {
-    background: #d6caa5;
+  background: #d6caa5;
 }

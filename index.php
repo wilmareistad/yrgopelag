@@ -13,7 +13,7 @@ $features = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <main>
 
     <section class="hero-text">
-        <h2>Welcome to Scubaland</h2>
+        <h2 id="h2">Welcome to Scubaland</h2>
         <div class="highlight-dot"></div>
         <p>Some of the most unforgettable experiences start beneath the surface. Add exciting dives, vibrant coral reefs, and new friends – and you get the true feeling of Scubaland. Feel good, have fun, explore magical places, and create memories that will last a lifetime on our underwater adventures.</p>
         <h3>Our rooms: where would you like to stay?</h3>
@@ -22,46 +22,46 @@ $features = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <form class="bookingForm" method="post" action="/app/users/booking.php">
         <div class="roomsFeatures">
             <!-- hotelrooms -->
-            <div class="rooms">
-                <?php foreach ($rooms as $room): ?>
-                    <label class="roomLabel">
-                        <div class="hotelContainer">
-                            <img class="hotelRoom" src="<?= $room['room_image'] ?>" alt="hotel room">
-                            <div>
-                                <input type="radio" name="room_id" value="<?= $room['id'] ?>" required>
-                                <?= htmlspecialchars($room['type']) ?> – <?= (int)$room['price'] ?> pesos/natt
-                            </div>
 
-                            <!-- calender -->
-                            <section class="calendar">
-                                <?php
-                                $statement = $database->prepare("SELECT check_in, check_out FROM bookings WHERE room_id = :room_id");
-                                $statement->execute([':room_id' => $room['id']]);
-                                $bookedDays = $statement->fetchAll(PDO::FETCH_ASSOC);
-
-                                $booked = [];
-                                foreach ($bookedDays as $bookedDay) {
-                                    $checkInDate = substr($bookedDay['check_in'], 8, 2);
-                                    $checkOutDate = substr($bookedDay['check_out'], 8, 2);
-                                    $bookedDaysRange = range($checkInDate, $checkOutDate);
-                                    $booked = array_merge($booked, $bookedDaysRange);
-                                }
-
-                                for ($i = 1; $i <= 31; $i++) :
-                                    if (in_array($i, $booked)) {
-                                        echo "<div class='day booked'>$i</div>";
-                                    } elseif (($i % 7) === 0 || ($i % 7) === 6) {
-                                        echo "<div class='day weekend'>$i</div>";
-                                    } else {
-                                        echo "<div class='day'>$i</div>";
-                                    }
-                                endfor;
-                                ?>
-                            </section>
+            <?php foreach ($rooms as $room): ?>
+                <label class="roomLabel">
+                    <div class="hotelContainer">
+                        <img class="hotelRoom" src="<?= $room['room_image'] ?>" alt="hotel room">
+                        <div>
+                            <input type="radio" name="room_id" value="<?= $room['id'] ?>" required>
+                            <?= htmlspecialchars($room['type']) ?> – <?= (int)$room['price'] ?> pesos/natt
                         </div>
-                    </label>
-                <?php endforeach; ?>
-            </div>
+
+                        <!-- calender -->
+                        <section class="calendar">
+                            <?php
+                            $statement = $database->prepare("SELECT check_in, check_out FROM bookings WHERE room_id = :room_id");
+                            $statement->execute([':room_id' => $room['id']]);
+                            $bookedDays = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+                            $booked = [];
+                            foreach ($bookedDays as $bookedDay) {
+                                $checkInDate = substr($bookedDay['check_in'], 8, 2);
+                                $checkOutDate = substr($bookedDay['check_out'], 8, 2);
+                                $bookedDaysRange = range($checkInDate, $checkOutDate);
+                                $booked = array_merge($booked, $bookedDaysRange);
+                            }
+
+                            for ($i = 1; $i <= 31; $i++) :
+                                if (in_array($i, $booked)) {
+                                    echo "<div class='day booked'>$i</div>";
+                                } elseif (($i % 7) === 0 || ($i % 7) === 6) {
+                                    echo "<div class='day weekend'>$i</div>";
+                                } else {
+                                    echo "<div class='day'>$i</div>";
+                                }
+                            endfor;
+                            ?>
+                        </section>
+                    </div>
+                </label>
+            <?php endforeach; ?>
+
 
             <!-- features -->
             <div class="featuresContainer">
@@ -79,21 +79,23 @@ $features = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         <div class="hotelContainer">
             <div class="checkinContainer">
-                <label>
-                    Check-in:
-                    <input type="date"
-                        name="check_in"
-                        min="2026-01-01"
-                        max="2026-01-31" required>
-                </label>
+                <div class="datescontainer">
+                    <label>
+                        Check-in:
+                        <input type="date"
+                            name="check_in"
+                            min="2026-01-01"
+                            max="2026-01-31" required>
+                    </label>
 
-                <label>
-                    Check-out:
-                    <input type="date"
-                        name="check_out"
-                        min="2026-01-01"
-                        max="2026-01-31" required>
-                </label>
+                    <label>
+                        Check-out:
+                        <input type="date"
+                            name="check_out"
+                            min="2026-01-01"
+                            max="2026-01-31" required>
+                    </label>
+                </div>
                 <label>
                     Your name:
                     <input type="text" name="name" required>
@@ -103,7 +105,7 @@ $features = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <input type="text" name="transferCode" placeholder="Your transfer code" required>
                 </label>
 
-                <button type="submit">Book Room</button>
+                <button class="btn btn-success" type="submit">Book Room</button>
     </form>
 
 
