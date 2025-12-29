@@ -1,4 +1,8 @@
-<?php require __DIR__ . '/app/autoload.php';
+<?php
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
+
+require __DIR__ . '/app/autoload.php';
 require __DIR__ . '/views/header.php';
 
 // get rooms
@@ -19,7 +23,7 @@ $features = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <h3>Our rooms: where would you like to stay?</h3>
     </section>
 
-    <form class="bookingForm" method="post" action="/app/users/booking.php">
+    <form class="bookingForm" method="post" action="app/users/booking.php">
         <div class="roomsFeatures">
             <!-- hotelrooms -->
 
