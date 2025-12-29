@@ -27,10 +27,10 @@ $features = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <label class="roomLabel">
                     <div class="hotelContainer">
                         <img class="hotelRoom" src="<?= $room['room_image'] ?>" alt="hotel room">
-                        <div>
+                        <label class="roomRadio">
                             <input type="radio" name="room_id" value="<?= $room['id'] ?>" required>
                             <?= htmlspecialchars($room['type']) ?> – <?= (int)$room['price'] ?> pesos/natt
-                        </div>
+                        </label>
 
                         <!-- calender -->
                         <section class="calendar">
@@ -68,7 +68,7 @@ $features = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <div class="hotelContainer">
                     <h3>Add features</h3>
                     <?php foreach ($features as $feature): ?>
-                        <label>
+                        <label class="featureCheckbox">
                             <input type="checkbox" name="features[]" value="<?= $feature['feature'] ?>">
                             <?= $feature['feature'] ?>: <?= (int)$feature['price'] ?> pesos
                         </label>

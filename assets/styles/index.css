@@ -91,12 +91,6 @@
     margin: 1rem;
 }
 
-.featuresContainer .hotelContainer {
-    justify-content: flex-start;
-    padding: 2rem;
-    gap: 1.2rem;
-}
-
 .transfer-btn {
   position: fixed;
   bottom: 200px;
@@ -113,4 +107,16 @@
 .roomLabel {
     display: block;
     height: 100%;
+}
+
+.roomRadio, .featureCheckbox {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    margin: 1rem;
+}
+
+.roomRadio:hover, .featureCheckbox:hover {
+    background-color: #f5f7fa;
 }
