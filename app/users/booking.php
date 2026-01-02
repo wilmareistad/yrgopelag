@@ -1,5 +1,6 @@
 <?php
 require __DIR__ . '/../autoload.php';
+
 // for guzzle to get bank data
 
 use GuzzleHttp\Client;
@@ -32,23 +33,26 @@ if (isset($_POST['room_id'], $_POST['check_in'], $_POST['check_out'], $_POST['na
     //features
     $selectedFeatures = $_POST['features'] ?? [];
 
-    $stmt = $database->query("SELECT feature, price FROM features");
+    $stmt = $database->query("SELECT feature, price, price_level FROM features");
     $allFeatures = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // count features
 
     // assoc array feature => price
     $featurePrices = [];
-    foreach ($allFeatures as $featurePrice) {
-        $featurePrices[$featurePrice['feature']] = (int)$featurePrice['price'];
+    foreach ($allFeatures as $featureData) {
+        $featurePrices[$featureData['feature']] = [
+            'price' => (int)$featureData['price'],
+            'price_level' => strtolower($featureData['price_level']) // economy, basic, premium, superior
+        ];
     }
 
     $totalFeaturePrice = 0;
-    foreach ($selectedFeatures as $featurePrice) {
-        if (isset($featurePrices[$featurePrice])) {
-            $totalFeaturePrice += $featurePrices[$featurePrice];
+    foreach ($selectedFeatures as $featureName) {
+        if (isset($featurePrices[$featureName])) {
+            $totalFeaturePrice += $featurePrices[$featureName]['price'];
         }
-    };
+    }
 
     $totalPriceForEverything = $totalPrice + $totalFeaturePrice;
 
@@ -64,35 +68,15 @@ if (isset($_POST['room_id'], $_POST['check_in'], $_POST['check_out'], $_POST['na
 
     // Guzzle
     $hotelUser = 'Wilma';
-    // $apiKey = $_ENV['API_KEY'];
 
-    $apiKey = getenv('textAPI_KEY') ?: ($_ENV['textAPI_KEY'] ?? '');
+    $apiKey = 'YOUR-API-KEY';
     $client = new Client(['base_uri' => 'https://www.yrgopelag.se/centralbank/']);
-
-
-    // $client = new Client([
-    //     'base_uri' => 'https://www.yrgopelag.se/centralbank/',
-    //     'verify' => false,
-    //     'headers' => [
-    //         'Accept' => 'application/json'
-    //     ]
-    // ]);
 
     try {
         // Validate transferCode
         $res = $client->post('transferCode', [
             'json' => ['transferCode' => $transferCode, 'totalCost' => $totalPriceForEverything]
         ]);
-
-
-        // $res = $client->post('transferCode', [
-        //     'http_errors' => false,
-        //     'json' => [
-        //         'transferCode' => $transferCode,
-        //         'totalCost' => (int) $totalPriceForEverything
-        //     ]
-        // ]);
-
 
         $validate = json_decode($res->getBody(), true);
         if (isset($validate['error'])) throw new Exception($validate['error']);
@@ -135,13 +119,14 @@ if (isset($_POST['room_id'], $_POST['check_in'], $_POST['check_out'], $_POST['na
             }
         }
 
-        // features array
         $featuresArray = [];
         foreach ($selectedFeatures as $featureName) {
-            $featuresArray[] = [
-                'activity' => $featureName ?: 'hotel-specific',
-                'tier' => 'premium'
-            ];
+            if (isset($featurePrices[$featureName])) {
+                $featuresArray[] = [
+                    'activity' => 'hotel-specific',
+                    'tier' => $featurePrices[$featureName]['price_level']
+                ];
+            }
         }
 
 

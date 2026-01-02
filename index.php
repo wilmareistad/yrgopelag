@@ -1,7 +1,4 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', '1');
-
 require __DIR__ . '/app/autoload.php';
 require __DIR__ . '/views/header.php';
 
@@ -14,6 +11,8 @@ $stmt = $database->query("SELECT * FROM features");
 $features = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
+
+
 <main>
 
     <section class="hero-text">

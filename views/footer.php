@@ -2,7 +2,7 @@
 <script src="assets/script/book.js"></script>
 
 <footer>
-    <a class="logo" href="/index.php">Scubaland</a>
+    <a class="logo" href="index.php">Scubaland</a>
     <nav class="footer-nav">
         <a href="index.html">Start</a>
     </nav>

@@ -94,23 +94,3 @@ nav a {
     color: var(--background-color);
     font-size: 1.2rem;
 }
-
-/* for receipt */
-
-.receiptContainer {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100vw;
-    height: 100vh;
-}
-
-.receipt {
-    background-color: var(--light-blue);
-    margin: 2rem;
-    border-radius: 1rem;
-}
-
-.hero h2 {
-    padding: 2rem;
-}
