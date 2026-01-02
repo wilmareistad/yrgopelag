@@ -3,7 +3,7 @@ require __DIR__ . '/../autoload.php';
 // for guzzle to get bank data
 
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestExepction;
+use GuzzleHttp\Exception\RequestException;
 
 $receipt = null;
 
@@ -64,14 +64,36 @@ if (isset($_POST['room_id'], $_POST['check_in'], $_POST['check_out'], $_POST['na
 
     // Guzzle
     $hotelUser = 'Wilma';
-    $apiKey = $_ENV['API_KEY'];
+    // $apiKey = $_ENV['API_KEY'];
+
+    $apiKey = getenv('textAPI_KEY') ?: ($_ENV['textAPI_KEY'] ?? '');
     $client = new Client(['base_uri' => 'https://www.yrgopelag.se/centralbank/']);
+
+
+    // $client = new Client([
+    //     'base_uri' => 'https://www.yrgopelag.se/centralbank/',
+    //     'verify' => false,
+    //     'headers' => [
+    //         'Accept' => 'application/json'
+    //     ]
+    // ]);
 
     try {
         // Validate transferCode
         $res = $client->post('transferCode', [
             'json' => ['transferCode' => $transferCode, 'totalCost' => $totalPriceForEverything]
         ]);
+
+
+        // $res = $client->post('transferCode', [
+        //     'http_errors' => false,
+        //     'json' => [
+        //         'transferCode' => $transferCode,
+        //         'totalCost' => (int) $totalPriceForEverything
+        //     ]
+        // ]);
+
+
         $validate = json_decode($res->getBody(), true);
         if (isset($validate['error'])) throw new Exception($validate['error']);
 
@@ -111,7 +133,17 @@ if (isset($_POST['room_id'], $_POST['check_in'], $_POST['check_out'], $_POST['na
                     ':booking_id' => $bookingId
                 ]);
             }
-        };
+        }
+
+        // features array
+        $featuresArray = [];
+        foreach ($selectedFeatures as $featureName) {
+            $featuresArray[] = [
+                'activity' => $featureName ?: 'hotel-specific',
+                'tier' => 'premium'
+            ];
+        }
+
 
         // Send receipt to centralbank
         $client->post('receipt', [
@@ -121,7 +153,7 @@ if (isset($_POST['room_id'], $_POST['check_in'], $_POST['check_out'], $_POST['na
                 'guest_name' => $name,
                 'arrival_date' => $checkIn,
                 'departure_date' => $checkOut,
-                'features_used' => $selectedFeatures,
+                'features_used' => $featuresArray,
                 'star_rating' => 5
             ]
         ]);
@@ -155,4 +187,4 @@ if ($receipt): ?>
             <p>Status: Booking confirmed and paid!</p>
         </div>
     </section>
-<?php endif;
+<?php endif; ?>

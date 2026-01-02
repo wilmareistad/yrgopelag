@@ -26,10 +26,4 @@ $database = new PDO($config['database_path']);
 use Dotenv\Dotenv;
 
 $dotenv = Dotenv::createImmutable(__DIR__ . "/..");
-// $dotenv->load();
 $dotenv->safeLoad();
-
-
-// $_ENV['API_KEY'];
-
-$apiKey = $_ENV['API_KEY'] ?? getenv('API_KEY');
