@@ -1,6 +1,5 @@
 <?php
 require __DIR__ . '/../autoload.php';
-
 // for guzzle to get bank data
 
 use GuzzleHttp\Client;
@@ -68,8 +67,7 @@ if (isset($_POST['room_id'], $_POST['check_in'], $_POST['check_out'], $_POST['na
 
     // Guzzle
     $hotelUser = 'Wilma';
-
-    $apiKey = 'YOUR-API-KEY';
+    $apiKey = $_ENV['API_KEY'];
     $client = new Client(['base_uri' => 'https://www.yrgopelag.se/centralbank/']);
 
     try {
