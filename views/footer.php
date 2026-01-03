@@ -6,6 +6,9 @@
     <nav class="footer-nav">
         <a href="index.html">Start</a>
     </nav>
+    <p class="stars">
+        ★★☆☆☆
+    </p>
     <p>© 2025 – Wilma Reistad</p>
 
 </footer>

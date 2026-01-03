@@ -31,3 +31,8 @@ footer p {
   margin: 0;
   opacity: 0.8;
 }
+
+.stars {
+  font-size: 1.5rem;
+  color: gold;
+}

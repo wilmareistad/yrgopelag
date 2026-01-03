@@ -137,7 +137,7 @@ if (isset($_POST['room_id'], $_POST['check_in'], $_POST['check_out'], $_POST['na
                 'arrival_date' => $checkIn,
                 'departure_date' => $checkOut,
                 'features_used' => $featuresArray,
-                'star_rating' => 5
+                'star_rating' => 2
             ]
         ]);
 
