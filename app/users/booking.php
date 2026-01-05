@@ -32,7 +32,7 @@ if (isset($_POST['room_id'], $_POST['check_in'], $_POST['check_out'], $_POST['na
     //features
     $selectedFeatures = $_POST['features'] ?? [];
 
-    $stmt = $database->query("SELECT feature, price, price_level FROM features");
+    $stmt = $database->query("SELECT feature, price, price_level, activity FROM features");
     $allFeatures = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // count features
@@ -41,8 +41,9 @@ if (isset($_POST['room_id'], $_POST['check_in'], $_POST['check_out'], $_POST['na
     $featurePrices = [];
     foreach ($allFeatures as $featureData) {
         $featurePrices[$featureData['feature']] = [
-            'price' => (int)$featureData['price'],
-            'price_level' => strtolower($featureData['price_level']) // economy, basic, premium, superior
+            'price'       => (int) $featureData['price'],
+            'price_level' => strtolower($featureData['price_level']),
+            'activity'    => $featureData['activity']
         ];
     }
 
@@ -118,11 +119,12 @@ if (isset($_POST['room_id'], $_POST['check_in'], $_POST['check_out'], $_POST['na
         }
 
         $featuresArray = [];
+
         foreach ($selectedFeatures as $featureName) {
             if (isset($featurePrices[$featureName])) {
                 $featuresArray[] = [
-                    'activity' => 'hotel-specific',
-                    'tier' => $featurePrices[$featureName]['price_level']
+                    'activity' => $featurePrices[$featureName]['activity'],
+                    'tier'     => $featurePrices[$featureName]['price_level']
                 ];
             }
         }
