@@ -9,7 +9,7 @@ $rooms = $statement->fetchAll(PDO::FETCH_ASSOC);
 // get features
 $stmt = $database->query("SELECT * FROM features");
 $features = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
+echo hash('sha256', 'WilmaR');
 ?>
 
 
