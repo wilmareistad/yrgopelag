@@ -91,6 +91,11 @@ nav a {
   padding: 1rem;
 }
 
-.adminRoom {
+.adminRoom, .adminFeatures {
   margin: 4rem 3rem;
 }
+
+/* .adminRoom tr, .adminFeatures tr {
+  display: flex;
+  gap: 1rem;
+} */
