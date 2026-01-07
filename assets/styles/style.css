@@ -19,6 +19,7 @@
 
 body {
   background-color: var(--background-color);
+  padding-top: 60px;
 }
 
 header nav {
@@ -90,31 +91,6 @@ nav a {
   padding: 1rem;
 }
 
-/* receipt */
-.receiptContainer {
-  display: flex;
-  justify-content: center;
-  padding: 2rem;
-  background: #f9f9f9;
-}
-
-.receipt {
-  padding: 1.5rem;
-  border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-}
-
-.receipt h2 {
-  margin-bottom: 1rem;
-  color: var(--blue);
-}
-
-.receipt p {
-  margin: 0.3rem 0;
-}
-
-.receipt p:last-child {
-  text-align: center;
-  color: green;
-  font-weight: bold;
+.adminRoom {
+  margin: 4rem 3rem;
 }
