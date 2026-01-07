@@ -26,7 +26,7 @@ header nav {
   position: fixed;
   top: 0;
   width: 100%;
-  padding: 1rem 3rem;
+  padding: 0.5rem 3rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -94,8 +94,3 @@ nav a {
 .adminRoom, .adminFeatures {
   margin: 4rem 3rem;
 }
-
-/* .adminRoom tr, .adminFeatures tr {
-  display: flex;
-  gap: 1rem;
-} */
