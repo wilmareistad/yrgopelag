@@ -7,7 +7,7 @@
         <a href="index.php">Start</a>
     </nav>
     <p class="stars">
-        ★★☆☆☆
+        ★★★☆☆
     </p>
     <p>© 2025 – Wilma Reistad</p>
     <a href="login.php">Admin</a>
