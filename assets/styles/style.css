@@ -21,27 +21,23 @@ body {
   background-color: var(--background-color);
 }
 
-/* header hero */
-.logo {
-  font-family: var(--logo-font);
-  color: var(--background-color);
-  font-size: 5rem;
-  font-weight: 600;
-}
-
 header nav {
-  position: absolute;
+  position: fixed;
   top: 0;
-  left: 0;
   width: 100%;
-  padding: 2rem 3rem;
+  padding: 1rem 3rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  z-index: 1000;
+  background-color: var(--background-color);
 }
 
 nav a {
   text-decoration: none;
+  color: var(--dark-blue);
+  font-weight: 500;
+  font-size: 1.4rem;
 }
 
 .hero {
@@ -66,7 +62,7 @@ nav a {
   font-family: var(--logo-font);
   font-size: 2.5rem;
   font-weight: 800;
-  color: var(--background-color);
+  color: var(--dark-blue);
   text-decoration: none;
 }
 
@@ -90,7 +86,35 @@ nav a {
   font-size: 1.5rem;
 }
 
-.navLinks a {
-    color: var(--background-color);
-    font-size: 1.2rem;
+.adminLogin {
+  padding: 1rem;
+}
+
+/* receipt */
+.receiptContainer {
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+  background: #f9f9f9;
+}
+
+.receipt {
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.receipt h2 {
+  margin-bottom: 1rem;
+  color: var(--blue);
+}
+
+.receipt p {
+  margin: 0.3rem 0;
+}
+
+.receipt p:last-child {
+  text-align: center;
+  color: green;
+  font-weight: bold;
 }

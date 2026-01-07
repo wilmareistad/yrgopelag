@@ -12,6 +12,7 @@ footer {
 footer .logo {
   font-weight: 700;
   text-decoration: none;
+  color: white;
 }
 
 .footer-nav a {
@@ -36,3 +37,4 @@ footer p {
   font-size: 1.5rem;
   color: gold;
 }
+

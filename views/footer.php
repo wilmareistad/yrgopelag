@@ -4,13 +4,13 @@
 <footer>
     <a class="logo" href="index.php">Scubaland</a>
     <nav class="footer-nav">
-        <a href="index.html">Start</a>
+        <a href="index.php">Start</a>
     </nav>
     <p class="stars">
         ★★☆☆☆
     </p>
     <p>© 2025 – Wilma Reistad</p>
-    <a href="/../login.php">Admin</a>
+    <a href="login.php">Admin</a>
 </footer>
 </body>
 

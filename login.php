@@ -1,6 +1,11 @@
-<article>
+<?php
+require __DIR__ . '/app/autoload.php';
+require __DIR__ . '/views/header.php';
+?>
+
+<article class="adminLogin">
     <h1>Login</h1>
-    <form action="app/users/login.php" method="post">
+    <form action="/yrgopelag/app/users/login.php" method="post">
         <div class="mb-3">
             <label for="email" class="form-label">Email</label>
             <input class="form-control" type="email" name="email" id="email" placeholder="francis@darjeeling.com" required>

@@ -9,11 +9,20 @@ $rooms = $statement->fetchAll(PDO::FETCH_ASSOC);
 // get features
 $stmt = $database->query("SELECT * FROM features");
 $features = $stmt->fetchAll(PDO::FETCH_ASSOC);
-echo hash('sha256', 'WilmaR');
+
 ?>
 
 
 <main>
+    <div class="hero">
+        <img src="assets/images/hero.png" alt="">
+        <div class="hero-overlay">
+            <a href="#h2">
+                <h1>Dive into Scubaland</h1>
+            </a>
+            <p>Rooms, reefs & real adventures</p>
+        </div>
+    </div>
 
     <section class="hero-text">
         <h2 id="h2">Welcome to Scubaland</h2>
