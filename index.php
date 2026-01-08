@@ -116,7 +116,7 @@ $features = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     Your transfercode:
                     <input type="text" name="transferCode" placeholder="Your transfer code" required>
                 </label>
-
+                <p>Check-in: 15:00 | Check-out: 11:00</p>
                 <button class="btn btn-success" type="submit">Book Room</button>
     </form>
 
