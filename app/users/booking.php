@@ -1,5 +1,13 @@
 <?php
 require __DIR__ . '/../autoload.php';
+
+function fetchColumn(PDO $database, $sql, array $params = [])
+{
+    $stmt = $database->prepare($sql);
+    $stmt->execute($params);
+    return $stmt->fetchColumn();
+}
+
 // for guzzle to get bank data
 
 use GuzzleHttp\Client;
@@ -23,9 +31,12 @@ if (isset($_POST['room_id'], $_POST['check_in'], $_POST['check_out'], $_POST['na
     if ($stmt->fetchColumn() > 0) die("Room already booked");
 
     // get the price for the hotel
-    $stmt = $database->prepare("SELECT price FROM rooms WHERE id = :room_id");
-    $stmt->execute([':room_id' => $roomId]);
-    $pricePerNight = (int)$stmt->fetchColumn();
+    $pricePerNight = (int) fetchColumn(
+        $database,
+        "SELECT price FROM rooms WHERE id = :room_id",
+        [':room_id' => $roomId]
+    );
+
     $nights = (new DateTime($checkIn))->diff(new DateTime($checkOut))->days;
     $totalPrice = $nights * $pricePerNight;
 
