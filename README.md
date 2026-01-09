@@ -52,7 +52,7 @@ book.php/book.js: I think the file could be renamed to transferCode.php/transfer
 
 book.php/book.js: Add error handling for user error. I tested entering my name and a wrong API-key to see what would happen and nothing happens on screen, but in the console there is an error message displayed. Could be helpful for users if they see that an error has occured.
 
-book.php 27-31: If you implement the above suggestion, it could also be good to link the amount input with the total from the index page so that is automatically generated for the user and minimizes the risk for user error.
+book.php 27-31: If you implement the suggestion for ``` index.php 114-115 ``` above, it could also be good to link the amount input with the total from the index page so that is automatically generated for the user and minimizes the risk for user error.
 
 assets/scripts/booking.js: empty file, could be removed for cleaner repo.
 
