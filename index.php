@@ -2,6 +2,8 @@
 require __DIR__ . '/app/autoload.php';
 require __DIR__ . '/views/header.php';
 
+
+
 // get rooms
 $statement = $database->query('SELECT * FROM rooms');
 $rooms = $statement->fetchAll(PDO::FETCH_ASSOC);
@@ -62,21 +64,32 @@ $features = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                             $booked = [];
                             foreach ($bookedDays as $bookedDay) {
-                                $checkInDate = substr($bookedDay['check_in'], 8, 2);
-                                $checkOutDate = substr($bookedDay['check_out'], 8, 2);
+                                $checkInDate = (int)substr($bookedDay['check_in'], 8, 2);
+                                $checkOutDate = (int)substr($bookedDay['check_out'], 8, 2) - 1;
+
                                 $bookedDaysRange = range($checkInDate, $checkOutDate);
                                 $booked = array_merge($booked, $bookedDaysRange);
                             }
 
-                            for ($i = 1; $i <= 31; $i++) :
+                            $firstOfMonth = date("N", strtotime("2026-01-01"));
+                            $daysInMonth = 31;
+
+                            for ($i = 1; $i < $firstOfMonth; $i++) {
+                                echo "<div class='day empty'> </div>";
+                            }
+
+                            for ($i = 1; $i <= $daysInMonth; $i++) {
+                                $dayOfWeek = date("N", strtotime("2026-01-$i"));
+
                                 if (in_array($i, $booked)) {
                                     echo "<div class='day booked'>$i</div>";
-                                } elseif (($i % 7) === 0 || ($i % 7) === 6) {
+                                } elseif ($dayOfWeek >= 6) {
                                     echo "<div class='day weekend'>$i</div>";
                                 } else {
                                     echo "<div class='day'>$i</div>";
                                 }
-                            endfor;
+                            }
+
                             ?>
                         </section>
                     </div>
@@ -127,10 +140,10 @@ $features = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </label>
                 <p>Check-in: 15:00 | Check-out: 11:00</p>
                 <button class="btn btn-success" type="submit">Book Room</button>
+            </div>
     </form>
 
 
-    </div>
     <section class="tranfercodeForm"> <?php require __DIR__ . "/book.php" ?> </section>
 </main>
 
