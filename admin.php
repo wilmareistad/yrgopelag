@@ -1,7 +1,13 @@
 <?php
 
-require __DIR__ . '/views/header.php';
 require __DIR__ . '/app/autoload.php';
+
+// validate the user
+
+if (!isset($_SESSION['user'])) {
+    header('Location: /yrgopelag/login.php');
+    exit;
+}
 
 // update the price on the rooms
 
@@ -32,6 +38,7 @@ $rooms = $database->query("SELECT * FROM rooms")->fetchAll(PDO::FETCH_ASSOC);
 $features = $database->query("SELECT * FROM features")->fetchAll(PDO::FETCH_ASSOC);
 
 // rooms
+require __DIR__ . '/views/header.php';
 ?>
 <div class="adminRoom">
     <table>
