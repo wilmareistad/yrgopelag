@@ -14,10 +14,7 @@ transferCodeForm.addEventListener('submit', (event) => {
 
   const data = Object.fromEntries(formData.entries());
 
-  const user = data.user;
-  const api_key = data.api_key;
-  const amount = data.amount;
-
+  const { user, api_key, amount } = data 
 
   fetch('https://www.yrgopelag.se/centralbank/withdraw', {
     method: 'POST',
