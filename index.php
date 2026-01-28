@@ -33,14 +33,6 @@ $features = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <h3>Our rooms: where would you like to stay?</h3>
     </section>
 
-    <?php if (!empty($_SESSION['errors'])): ?>
-        <div>
-            <?php foreach ($_SESSION['errors'] as $error): ?>
-                <p style="color:red"><?= htmlspecialchars($error) ?></p>
-            <?php endforeach; ?>
-        </div>
-    <?php $_SESSION['errors'] = [];
-    endif; ?>
 
     <form class="bookingForm" method="post" action="app/users/booking.php">
         <div class="roomsFeatures">
@@ -111,7 +103,15 @@ $features = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
         </div>
 
-        <div class="hotelContainer">
+        <div class="hotelContainer" id="booking-form">
+            <?php if (!empty($_SESSION['errors'])): ?>
+                <div>
+                    <?php foreach ($_SESSION['errors'] as $error): ?>
+                        <p style="color:red"><?= htmlspecialchars($error) ?></p>
+                    <?php endforeach; ?>
+                </div>
+            <?php $_SESSION['errors'] = [];
+            endif; ?>
             <div class="checkinContainer">
                 <div class="datescontainer">
                     <label>

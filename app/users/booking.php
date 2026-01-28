@@ -27,7 +27,7 @@ if (isset($_POST['room_id'], $_POST['check_in'], $_POST['check_out'], $_POST['na
     //check out must be greater then check in
     if ($checkOut <= $checkIn) {
         $_SESSION['errors'][] = 'Check-out must be after check-in.';
-        header('Location: /yrgopelag/index.php');
+        header('Location: /yrgopelag/index.php#booking-form');
         exit;
     }
 
@@ -37,7 +37,7 @@ if (isset($_POST['room_id'], $_POST['check_in'], $_POST['check_out'], $_POST['na
 
     if ($stmt->fetchColumn() > 0) {
         $_SESSION['errors'][] = 'Room is already booked for the selected dates.';
-        header('Location: /yrgopelag/index.php');
+        header('Location: /yrgopelag/index.php#booking-form');
         exit;
     }
 
