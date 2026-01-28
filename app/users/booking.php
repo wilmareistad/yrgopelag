@@ -1,6 +1,8 @@
 <?php
 require __DIR__ . '/../autoload.php';
 
+$_SESSION['errors'] = $_SESSION['errors'] ?? [];
+
 function fetchColumn(PDO $database, $sql, array $params = [])
 {
     $stmt = $database->prepare($sql);
@@ -23,12 +25,21 @@ if (isset($_POST['room_id'], $_POST['check_in'], $_POST['check_out'], $_POST['na
     $transferCode = $_POST['transferCode'];
 
     //check out must be greater then check in
-    if ($checkOut <= $checkIn) die("Check-out must be after check-in");
+    if ($checkOut <= $checkIn) {
+        $_SESSION['errors'][] = 'Check-out must be after check-in.';
+        header('Location: /yrgopelag/index.php');
+        exit;
+    }
 
     // check if the room is free
     $stmt = $database->prepare("SELECT COUNT(*) FROM bookings WHERE room_id = :room_id AND NOT (check_out <= :check_in OR check_in >= :check_out)");
     $stmt->execute([':room_id' => $roomId, ':check_in' => $checkIn, ':check_out' => $checkOut]);
-    if ($stmt->fetchColumn() > 0) die("Room already booked");
+
+    if ($stmt->fetchColumn() > 0) {
+        $_SESSION['errors'][] = 'Room is already booked for the selected dates.';
+        header('Location: /yrgopelag/index.php');
+        exit;
+    }
 
     // get the price for the hotel
     $pricePerNight = (int) fetchColumn(
@@ -165,7 +176,9 @@ if (isset($_POST['room_id'], $_POST['check_in'], $_POST['check_out'], $_POST['na
             'totalPriceForEverything' => $totalPriceForEverything
         ];
     } catch (Exception $e) {
-        echo "<p style='color:red'>Fel: " . $e->getMessage() . "</p>";
+        $_SESSION['errors'][] = $e->getMessage();
+        header('Location: /yrgopelag/index.php');
+        exit;
     }
 }
 
