@@ -8,6 +8,7 @@ require __DIR__ . '/views/header.php';
 $statement = $database->query('SELECT * FROM rooms');
 $rooms = $statement->fetchAll(PDO::FETCH_ASSOC);
 
+
 // get features
 $stmt = $database->query("SELECT * FROM features");
 $features = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -147,7 +148,7 @@ $features = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </form>
 
 
-    <section class="tranfercodeForm"> <?php require __DIR__ . "/book.php" ?> </section>
+    <section class="tranfercodeForm"> <?php require __DIR__ . "/app/book.php" ?> </section>
 </main>
 
 <?php require __DIR__ . '/views/footer.php';

@@ -1,6 +1,6 @@
 <?php
-require __DIR__ . '/app/autoload.php';
-require __DIR__ . '/views/header.php';
+require __DIR__ . '/autoload.php';
+require __DIR__ . '/../views/header.php';
 ?>
 
 <article class="adminLogin">
@@ -22,4 +22,4 @@ require __DIR__ . '/views/header.php';
     </form>
 </article>
 
-<?php require __DIR__ . '/views/footer.php'; ?>
+<?php require __DIR__ . '/../views/footer.php'; ?>

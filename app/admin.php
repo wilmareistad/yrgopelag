@@ -1,11 +1,11 @@
 <?php
 
-require __DIR__ . '/app/autoload.php';
+require __DIR__ . '/autoload.php';
 
 // validate the user
 
 if (!isset($_SESSION['user'])) {
-    header('Location: /yrgopelag/login.php');
+    header('Location: /yrgopelag/app/login.php');
     exit;
 }
 
@@ -38,7 +38,7 @@ $rooms = $database->query("SELECT * FROM rooms")->fetchAll(PDO::FETCH_ASSOC);
 $features = $database->query("SELECT * FROM features")->fetchAll(PDO::FETCH_ASSOC);
 
 // rooms
-require __DIR__ . '/views/header.php';
+require __DIR__ . '/../views/header.php';
 ?>
 <div class="adminRoom">
     <table>
@@ -93,4 +93,4 @@ require __DIR__ . '/views/header.php';
     </table>
 </div>
 
-<?php require __DIR__ . '/views/footer.php';
+<?php require __DIR__ . '/../views/footer.php';
