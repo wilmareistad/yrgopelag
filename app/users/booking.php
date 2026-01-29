@@ -100,17 +100,36 @@ if (isset($_POST['room_id'], $_POST['check_in'], $_POST['check_out'], $_POST['na
         ]);
 
         $validate = json_decode($res->getBody(), true);
-        if (isset($validate['error'])) throw new Exception($validate['error']);
+
+        if (isset($validate['error'])) {
+            throw new Exception($validate['error']);
+        }
+    } catch (Exception $e) {
+        $_SESSION['errors'][] = 'Payment validation failed: ' . $e->getMessage();
+        header('Location: /yrgopelag/index.php#booking-form');
+        exit;
+    }
+
+    try {
 
         // Deposit
         $res = $client->post('deposit', [
             'json' => ['user' => $hotelUser, 'transferCode' => $transferCode]
         ]);
         $deposit = json_decode($res->getBody(), true);
+
         if (!isset($deposit['status']) || $deposit['status'] !== "success") throw new Exception($deposit['error'] ?? "Deposit failed");
+    } catch (Exception $e) {
+        $_SESSION['errors'][] = 'Payment failed: ' . $e->getMessage();
+        header('Location: /yrgopelag/index.php#booking-form');
+        exit;
+    }
+
+    try {
 
         // Save booking
         $stmt = $database->prepare("INSERT INTO bookings (guest_id, room_id, check_in, check_out, totalprice) VALUES (:guest_id, :room_id, :check_in, :check_out, :totalprice)");
+
         $stmt->execute([
             ':guest_id' => $guestId,
             ':room_id' => $roomId,
@@ -120,9 +139,15 @@ if (isset($_POST['room_id'], $_POST['check_in'], $_POST['check_out'], $_POST['na
         ]);
 
         $bookingId = (int) $database->lastInsertId();
+    } catch (Exception $e) {
+        $_SESSION['errors'][] = 'Could not save booking.';
+        header('Location: /yrgopelag/index.php');
+        exit;
+    }
+
+    try {
 
         // save booking and feature
-
         foreach ($selectedFeatures as $featureName) {
 
             $stmt = $database->prepare("SELECT id FROM features WHERE feature = :feature");
@@ -139,18 +164,24 @@ if (isset($_POST['room_id'], $_POST['check_in'], $_POST['check_out'], $_POST['na
                 ]);
             }
         }
+    } catch (Exception $e) {
+        $_SESSION['errors'][] = 'Could not save selected features.';
+        header('Location: /yrgopelag/index.php');
+        exit;
+    }
 
-        $featuresArray = [];
+    $featuresArray = [];
 
-        foreach ($selectedFeatures as $featureName) {
-            if (isset($featurePrices[$featureName])) {
-                $featuresArray[] = [
-                    'activity' => $featurePrices[$featureName]['activity'],
-                    'tier'     => $featurePrices[$featureName]['price_level']
-                ];
-            }
+    foreach ($selectedFeatures as $featureName) {
+        if (isset($featurePrices[$featureName])) {
+            $featuresArray[] = [
+                'activity' => $featurePrices[$featureName]['activity'],
+                'tier'     => $featurePrices[$featureName]['price_level']
+            ];
         }
+    }
 
+    try {
 
         // Send receipt to centralbank
         $client->post('receipt', [
@@ -164,24 +195,21 @@ if (isset($_POST['room_id'], $_POST['check_in'], $_POST['check_out'], $_POST['na
                 'star_rating' => 2
             ]
         ]);
-
-        // Receipt for frontend
-        $receipt = [
-            'guest' => $name,
-            'roomId' => $roomId,
-            'check_in' => $checkIn,
-            'check_out' => $checkOut,
-            'nights' => $nights,
-            'totalPrice' => $totalPrice,
-            'totalPriceForEverything' => $totalPriceForEverything
-        ];
     } catch (Exception $e) {
-        $_SESSION['errors'][] = $e->getMessage();
-        header('Location: /yrgopelag/index.php');
-        exit;
+        $_SESSION['errors'][] = 'Booking saved but receipt could not be sent.';
     }
-}
 
+    // Receipt for frontend
+    $receipt = [
+        'guest' => $name,
+        'roomId' => $roomId,
+        'check_in' => $checkIn,
+        'check_out' => $checkOut,
+        'nights' => $nights,
+        'totalPrice' => $totalPrice,
+        'totalPriceForEverything' => $totalPriceForEverything
+    ];
+}
 if ($receipt): ?>
     <section class="receiptContainer">
         <div class="receipt">
