@@ -121,3 +121,7 @@
 .featureCheckbox:hover {
   background-color: #f5f7fa;
 }
+
+.errors {
+  color: red;
+}

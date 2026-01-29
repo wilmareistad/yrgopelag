@@ -104,14 +104,17 @@ $features = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
 
         <div class="hotelContainer" id="booking-form">
-            <?php if (!empty($_SESSION['errors'])): ?>
-                <div>
-                    <?php foreach ($_SESSION['errors'] as $error): ?>
-                        <p style="color:red"><?= htmlspecialchars($error) ?></p>
-                    <?php endforeach; ?>
-                </div>
-            <?php $_SESSION['errors'] = [];
-            endif; ?>
+            <section class="errors">
+                <?php if (!empty($_SESSION['errors'])): ?>
+                    <div>
+                        <?php foreach ($_SESSION['errors'] as $error): ?>
+                            <p><?= htmlspecialchars($error) ?></p>
+                        <?php endforeach; ?>
+                    </div>
+
+                <?php $_SESSION['errors'] = [];
+                endif; ?>
+            </section>
             <div class="checkinContainer">
                 <div class="datescontainer">
                     <label>
