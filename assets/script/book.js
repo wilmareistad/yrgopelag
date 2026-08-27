@@ -6,6 +6,8 @@ const offcanvas = document.querySelector("#getTransferCode");
 };
 
 const transferCodeForm = document.getElementById('getTransferCode');
+
+if (transferCodeForm) {
 transferCodeForm.addEventListener('submit', (event) => {
 
   event.preventDefault();
@@ -32,4 +34,5 @@ transferCodeForm.addEventListener('submit', (event) => {
       }
     });
 });
+}
 

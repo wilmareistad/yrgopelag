@@ -1,227 +1,58 @@
 <?php
-require __DIR__ . '/../autoload.php';
 
-$_SESSION['errors'] = $_SESSION['errors'] ?? [];
+declare(strict_types=1);
 
-function fetchColumn(PDO $database, $sql, array $params = [])
-{
-    $stmt = $database->prepare($sql);
-    $stmt->execute($params);
-    return $stmt->fetchColumn();
+require __DIR__ . '/../../vendor/autoload.php';
+
+use App\Bootstrap;
+use App\Exceptions\BookingException;
+use App\Exceptions\PaymentException;
+use App\Http\CentralBankClient;
+use App\Repositories\BookingRepository;
+use App\Repositories\FeatureRepository;
+use App\Repositories\GuestRepository;
+use App\Repositories\RoomRepository;
+use App\Services\AvailabilityService;
+use App\Services\BookingRequest;
+use App\Services\BookingService;
+use App\Services\PricingService;
+use App\Support\Csrf;
+use App\Support\Redirect;
+use App\Support\Session;
+use App\Support\View;
+
+$boot = Bootstrap::init(dirname(__DIR__, 2));
+
+$session = new Session();
+$csrf = new Csrf();
+
+if (!$csrf->verify($_POST['csrf_token'] ?? null)) {
+    $session->flashError('Your session expired, please try again.');
+    Redirect::to('/index.php#booking-form');
 }
 
-// for guzzle to get bank data
+$pdo = $boot->pdo();
 
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
+$bookingService = new BookingService(
+    new RoomRepository($pdo),
+    new FeatureRepository($pdo),
+    new GuestRepository($pdo),
+    new BookingRepository($pdo),
+    new AvailabilityService(new BookingRepository($pdo)),
+    new PricingService(),
+    new CentralBankClient($boot->config()),
+);
 
-$receipt = null;
-
-if (isset($_POST['room_id'], $_POST['check_in'], $_POST['check_out'], $_POST['name'], $_POST['transferCode'])) {
-    $roomId = $_POST['room_id'];
-    $checkIn = $_POST['check_in'];
-    $checkOut = $_POST['check_out'];
-    $name = htmlspecialchars(trim($_POST['name']));
-    $transferCode = $_POST['transferCode'];
-
-    //check out must be greater then check in
-    if ($checkOut <= $checkIn) {
-        $_SESSION['errors'][] = 'Check-out must be after check-in.';
-        header('Location: /yrgopelag/index.php#booking-form');
-        exit;
-    }
-
-    // check if the room is free
-    $stmt = $database->prepare("SELECT COUNT(*) FROM bookings WHERE room_id = :room_id AND NOT (check_out <= :check_in OR check_in >= :check_out)");
-    $stmt->execute([':room_id' => $roomId, ':check_in' => $checkIn, ':check_out' => $checkOut]);
-
-    if ($stmt->fetchColumn() > 0) {
-        $_SESSION['errors'][] = 'Room is already booked for the selected dates.';
-        header('Location: /yrgopelag/index.php#booking-form');
-        exit;
-    }
-
-    // get the price for the hotel
-    $pricePerNight = (int) fetchColumn(
-        $database,
-        "SELECT price FROM rooms WHERE id = :room_id",
-        [':room_id' => $roomId]
-    );
-
-    $nights = (new DateTime($checkIn))->diff(new DateTime($checkOut))->days;
-    $totalPrice = $nights * $pricePerNight;
-
-    //features
-    $selectedFeatures = $_POST['features'] ?? [];
-
-    $stmt = $database->query("SELECT feature, price, price_level, activity FROM features");
-    $allFeatures = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    // count features
-
-    // assoc array feature => price
-    $featurePrices = [];
-    foreach ($allFeatures as $featureData) {
-        $featurePrices[$featureData['feature']] = [
-            'price'       => (int) $featureData['price'],
-            'price_level' => strtolower($featureData['price_level']),
-            'activity'    => $featureData['activity']
-        ];
-    }
-
-    $totalFeaturePrice = 0;
-    foreach ($selectedFeatures as $featureName) {
-        if (isset($featurePrices[$featureName])) {
-            $totalFeaturePrice += $featurePrices[$featureName]['price'];
-        }
-    }
-
-    $totalPriceForEverything = $totalPrice + $totalFeaturePrice;
-
-    // add the guest if it not exist
-    $stmt = $database->prepare("SELECT id FROM guests WHERE name = :name");
-    $stmt->execute([':name' => $name]);
-    $guestId = $stmt->fetchColumn();
-    if (!$guestId) {
-        $stmt = $database->prepare("INSERT INTO guests (name) VALUES (:name)");
-        $stmt->execute([':name' => $name]);
-        $guestId = (int)$database->lastInsertId();
-    }
-
-    // Guzzle
-    $hotelUser = 'Wilma';
-    $apiKey = $_ENV['API_KEY'];
-    $client = new Client(['base_uri' => 'https://www.yrgopelag.se/centralbank/']);
-
-    try {
-        // Validate transferCode
-        $res = $client->post('transferCode', [
-            'json' => ['transferCode' => $transferCode, 'totalCost' => $totalPriceForEverything]
-        ]);
-
-        $validate = json_decode($res->getBody(), true);
-
-        if (isset($validate['error'])) {
-            throw new Exception($validate['error']);
-        }
-    } catch (Exception $e) {
-        $_SESSION['errors'][] = 'Payment validation failed: ' . $e->getMessage();
-        header('Location: /yrgopelag/index.php#booking-form');
-        exit;
-    }
-
-    try {
-
-        // Deposit
-        $res = $client->post('deposit', [
-            'json' => ['user' => $hotelUser, 'transferCode' => $transferCode]
-        ]);
-        $deposit = json_decode($res->getBody(), true);
-
-        if (!isset($deposit['status']) || $deposit['status'] !== "success") throw new Exception($deposit['error'] ?? "Deposit failed");
-    } catch (Exception $e) {
-        $_SESSION['errors'][] = 'Payment failed: ' . $e->getMessage();
-        header('Location: /yrgopelag/index.php#booking-form');
-        exit;
-    }
-
-    try {
-
-        // Save booking
-        $stmt = $database->prepare("INSERT INTO bookings (guest_id, room_id, check_in, check_out, totalprice) VALUES (:guest_id, :room_id, :check_in, :check_out, :totalprice)");
-
-        $stmt->execute([
-            ':guest_id' => $guestId,
-            ':room_id' => $roomId,
-            ':check_in' => $checkIn,
-            ':check_out' => $checkOut,
-            ':totalprice' => $totalPriceForEverything
-        ]);
-
-        $bookingId = (int) $database->lastInsertId();
-    } catch (Exception $e) {
-        $_SESSION['errors'][] = 'Could not save booking.';
-        header('Location: /yrgopelag/index.php');
-        exit;
-    }
-
-    try {
-
-        // save booking and feature
-        foreach ($selectedFeatures as $featureName) {
-
-            $stmt = $database->prepare("SELECT id FROM features WHERE feature = :feature");
-
-            $stmt->execute([':feature' => $featureName]);
-            $featureId = $stmt->fetchColumn();
-
-            if ($featureId) {
-                $stmt = $database->prepare("INSERT INTO feature_booking (feature_id, booking_id) VALUES (:feature_id, :booking_id)");
-
-                $stmt->execute([
-                    ':feature_id' => $featureId,
-                    ':booking_id' => $bookingId
-                ]);
-            }
-        }
-    } catch (Exception $e) {
-        $_SESSION['errors'][] = 'Could not save selected features.';
-        header('Location: /yrgopelag/index.php');
-        exit;
-    }
-
-    $featuresArray = [];
-
-    foreach ($selectedFeatures as $featureName) {
-        if (isset($featurePrices[$featureName])) {
-            $featuresArray[] = [
-                'activity' => $featurePrices[$featureName]['activity'],
-                'tier'     => $featurePrices[$featureName]['price_level']
-            ];
-        }
-    }
-
-    try {
-
-        // Send receipt to centralbank
-        $client->post('receipt', [
-            'json' => [
-                'user' => $hotelUser,
-                'api_key' => $apiKey,
-                'guest_name' => $name,
-                'arrival_date' => $checkIn,
-                'departure_date' => $checkOut,
-                'features_used' => $featuresArray,
-                'star_rating' => 2
-            ]
-        ]);
-    } catch (Exception $e) {
-        $_SESSION['errors'][] = 'Booking saved but receipt could not be sent.';
-    }
-
-    // Receipt for frontend
-    $receipt = [
-        'guest' => $name,
-        'roomId' => $roomId,
-        'check_in' => $checkIn,
-        'check_out' => $checkOut,
-        'nights' => $nights,
-        'totalPrice' => $totalPrice,
-        'totalPriceForEverything' => $totalPriceForEverything
-    ];
+try {
+    $request = BookingRequest::fromArray($_POST);
+    $result = $bookingService->book($request);
+} catch (BookingException|PaymentException $e) {
+    $session->flashError($e->getMessage());
+    Redirect::to('/index.php#booking-form');
 }
-if ($receipt): ?>
-    <section class="receiptContainer">
-        <div class="receipt">
-            <h2>Receipt</h2>
-            <p>Guest: <?= $receipt['guest'] ?></p>
-            <p>Room ID: <?= $receipt['roomId'] ?></p>
-            <p>Check-in: <?= $receipt['check_in'] ?></p>
-            <p>Check-out: <?= $receipt['check_out'] ?></p>
-            <p>Nights: <?= $receipt['nights'] ?></p>
-            <p>Hotel Price: <?= $receipt['totalPrice'] ?> pesos</p>
-            <p>Total Price: <?= $receipt['totalPriceForEverything'] ?> pesos</p>
-            <p>Status: Booking confirmed and paid!</p>
-        </div>
-    </section>
-<?php endif; ?>
+
+require __DIR__ . '/../../views/header.php';
+
+View::render(__DIR__ . '/../../views/receipt.php', ['result' => $result]);
+
+require __DIR__ . '/../../views/footer.php';

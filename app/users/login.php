@@ -1,37 +1,41 @@
 <?php
 
-require __DIR__ . '/../autoload.php';
+declare(strict_types=1);
+
+require __DIR__ . '/../../vendor/autoload.php';
+
+use App\Bootstrap;
+use App\Repositories\UserRepository;
+use App\Services\AuthService;
+use App\Support\Csrf;
+use App\Support\Redirect;
+use App\Support\Session;
+
+$boot = Bootstrap::init(dirname(__DIR__, 2));
+
+$session = new Session();
+$csrf = new Csrf();
+
+if (!$csrf->verify($_POST['csrf_token'] ?? null)) {
+    $session->flashError('Your session expired, please try again.');
+    Redirect::to('/app/login.php');
+}
 
 if (!isset($_POST['email'], $_POST['password'])) {
-    header('Location: /yrgopelag/app/login.php');;
-    exit;
+    Redirect::to('/app/login.php');
 }
 
 $email = trim($_POST['email']);
 
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    header('Location: /yrgopelag/app/login.php');;
-    exit;
+    Redirect::to('/app/login.php');
 }
 
-$stmt = $database->prepare(
-    'SELECT * FROM users WHERE email = :email'
-);
-$stmt->bindParam(':email', $email, PDO::PARAM_STR);
-$stmt->execute();
+$auth = new AuthService(new UserRepository($boot->pdo()), $session);
 
-$user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-if (!$user) {
-    header('Location: /yrgopelag/app/login.php');
-    exit;
+if ($auth->attempt($email, $_POST['password'])) {
+    Redirect::to('/app/admin.php');
 }
 
-if (password_verify($_POST['password'], $user['password'])) {
-    $_SESSION['user'] = $user;
-    header('Location: /yrgopelag/app/admin.php');
-    exit;
-}
-
-header('Location: /yrgopelag/app/login.php');
-exit;
+$session->flashError('Invalid email or password.');
+Redirect::to('/app/login.php');

@@ -1,11 +1,30 @@
 <?php
-require __DIR__ . '/autoload.php';
+
+declare(strict_types=1);
+
+require __DIR__ . '/../vendor/autoload.php';
+
+use App\Bootstrap;
+use App\Support\Csrf;
+use App\Support\Redirect;
+use App\Support\Session;
+
+Bootstrap::init(dirname(__DIR__));
+
+$session = new Session();
+$csrf = new Csrf();
+
+if ($session->isLoggedIn()) {
+    Redirect::to('/app/admin.php');
+}
+
 require __DIR__ . '/../views/header.php';
 ?>
 
 <article class="adminLogin">
     <h1>Login</h1>
-    <form action="/yrgopelag/app/users/login.php" method="post">
+    <form action="/app/users/login.php" method="post">
+        <?= $csrf->field() ?>
         <div class="mb-3">
             <label for="email" class="form-label">Email</label>
             <input class="form-control" type="email" name="email" id="email" placeholder="francis@darjeeling.com" required>
