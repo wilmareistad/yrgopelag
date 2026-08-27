@@ -10,7 +10,7 @@
         ★★★☆☆
     </p>
     <p>© 2025 – Wilma Reistad</p>
-    <a href="/yrgopelag/app/login.php">Admin</a>
+    <a href="/app/login.php">Admin</a>
 </footer>
 </body>
 
